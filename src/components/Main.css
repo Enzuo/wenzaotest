@@ -1,0 +1,33 @@
+.level-select {
+  margin: 10px;
+  float: right;
+}
+
+.level-select li{
+  display: inline;
+  list-style-type: none;
+  padding: 10px;
+  margin: 0 10px;
+  float: left;
+  cursor: pointer;
+}
+
+.level-select .selected {
+  border-radius: 30px;
+  background-color: #55cfe2;
+  color:white;
+}
+
+.character-list {
+  width: 500px;
+  margin: 0 auto;
+}
+
+td {
+  padding: 20px 20px;
+  font-size: 25px;
+}
+
+td.pinyin {
+  font-size : 15px;
+}
