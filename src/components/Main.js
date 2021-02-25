@@ -6,17 +6,19 @@ import hskTool from '../hsktool.js'
 class Main extends React.Component {
   constructor(props) {
     super(props)
-    this.state = { selectedLevel: 1 }
+    this.state = { selectedLevel: 1, user : 'enzo' }
 
     this.handleLevelSelect = this.handleLevelSelect.bind(this);
+    this.handleUserChange = this.handleUserChange.bind(this);
   }
 
 
   render() {
     return (
       <div>
+        <input className="user" value={this.state.user} onChange={this.handleUserChange}></input>
         <LevelSelect selectedLevel={this.state.selectedLevel} onSelect={this.handleLevelSelect}></LevelSelect>
-        <CharacterList key={this.state.selectedLevel} level={this.state.selectedLevel}></CharacterList>
+        <CharacterList key={this.state.selectedLevel} level={this.state.selectedLevel} user={this.state.user}></CharacterList>
       </div>
     )
   }
@@ -25,6 +27,9 @@ class Main extends React.Component {
     this.setState({
       selectedLevel : level
     })
+  }
+  handleUserChange(e){
+    this.setState({ user : e.target.value })
   }
 }
 
@@ -37,9 +42,9 @@ class CharacterList extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      userSave : getSaveForUser(this.props.user, this.props.level)
-    }
+    // this.state = {
+    //   userSave : getSaveForUser(this.props.user, this.props.level)
+    // }
 
     this.handleCorrectClick = this.handleCorrectClick.bind(this);
     this.handleWrongClick = this.handleWrongClick.bind(this);
@@ -49,11 +54,7 @@ class CharacterList extends React.Component {
     var vocab = hskTool.getVocabForLevel(this.props.level)
     var nbVocab = vocab.length;
 
-    // var userSave = getSaveForUser(this.props.user, this.props.level)
-    var userSave = this.state.userSave
-
-    // console.log(this.state.userSave)
-
+    var userSave = getSaveForUser(this.props.user, this.props.level)
 
     // Only show different characters between traditionnal and simplified
     vocab = vocab.filter((a) => {
@@ -104,17 +105,16 @@ class CharacterList extends React.Component {
     var id = e.target.getAttribute('data-value')
     var newSave = this.state.userSave
     newSave[id] = true
-    this.setState({ userSave : newSave })
     setSaveForUser(this.props.user, this.props.level, newSave)
+    this.forceUpdate()
   }
 
   handleWrongClick(e){
     var id = e.target.getAttribute('data-value')
     var newSave = this.state.userSave
     newSave[id] = false
-    this.setState({ userSave : newSave })
     setSaveForUser(this.props.user, this.props.level, newSave)
-
+    this.forceUpdate()
   }
 }
 

@@ -69,3 +69,8 @@ table {
 tr:nth-child(even) {
   background: #fbfbfb
 }
+
+input.user {
+  border-bottom: 1px solid #EEE !important;
+  border: 0px solid #000;
+}
