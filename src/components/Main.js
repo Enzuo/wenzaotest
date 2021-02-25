@@ -103,7 +103,7 @@ class CharacterList extends React.Component {
 
   handleCorrectClick(e){
     var id = e.target.getAttribute('data-value')
-    var newSave = this.state.userSave
+    var newSave =  getSaveForUser(this.props.user, this.props.level)
     newSave[id] = true
     setSaveForUser(this.props.user, this.props.level, newSave)
     this.forceUpdate()
@@ -111,7 +111,7 @@ class CharacterList extends React.Component {
 
   handleWrongClick(e){
     var id = e.target.getAttribute('data-value')
-    var newSave = this.state.userSave
+    var newSave = getSaveForUser(this.props.user, this.props.level)
     newSave[id] = false
     setSaveForUser(this.props.user, this.props.level, newSave)
     this.forceUpdate()
