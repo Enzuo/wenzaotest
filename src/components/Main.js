@@ -49,8 +49,14 @@ class CharacterList extends React.Component {
     })
     var nbVocabAfterFilter = vocab.length
 
+    
     var list = vocab.map((a) => {
-      return <tr><td>{a.simplified}</td><td>{a.traditional}</td><td className="pinyin">{a.pinyin}</td></tr>
+      var dictUrl = 'https://www.archchinese.com/chinese_english_dictionary.html?find='+a.traditional
+      return <tr>
+        <td>{a.simplified}</td>
+        <td><a href={dictUrl}>{a.traditional}</a></td>
+        <td className="pinyin">{a.pinyin}</td>
+      </tr>
     })
 
     return (
