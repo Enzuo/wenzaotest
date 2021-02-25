@@ -35,3 +35,15 @@ td.pinyin {
 a {
   text-decoration: none;
 }
+
+.buttons {
+  opacity: 20%;
+  cursor: pointer;
+}
+
+.buttons:hover {
+  opacity: 100%;
+}
+.buttons.selected {
+  opacity: 100%;
+}

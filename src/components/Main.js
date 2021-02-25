@@ -16,7 +16,7 @@ class Main extends React.Component {
     return (
       <div>
         <LevelSelect selectedLevel={this.state.selectedLevel} onSelect={this.handleLevelSelect}></LevelSelect>
-        <CharacterList level={this.state.selectedLevel}></CharacterList>
+        <CharacterList key={this.state.selectedLevel} level={this.state.selectedLevel}></CharacterList>
       </div>
     )
   }
@@ -30,17 +30,29 @@ class Main extends React.Component {
 
 
 class CharacterList extends React.Component {
-  // constructor(props) {
-  //   super(props);
+  static defaultProps = {
+    user : 'enzo'
+  }
 
-  //   // this.state
-  // }
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      userSave : getSaveForUser(this.props.user, this.props.level)
+    }
+
+    this.handleCorrectClick = this.handleCorrectClick.bind(this);
+    this.handleWrongClick = this.handleWrongClick.bind(this);
+  }
 
   render() {
     var vocab = hskTool.getVocabForLevel(this.props.level)
     var nbVocab = vocab.length;
 
-    console.log(vocab)
+    // var userSave = getSaveForUser(this.props.user, this.props.level)
+    var userSave = this.state.userSave
+
+    // console.log(this.state.userSave)
 
 
     // Only show different characters between traditionnal and simplified
@@ -52,19 +64,49 @@ class CharacterList extends React.Component {
     
     var list = vocab.map((a) => {
       var dictUrl = 'https://www.archchinese.com/chinese_english_dictionary.html?find='+a.traditional
+
+
+      var correctButtonClass = 'buttons'
+      var wrongButtonClass = 'buttons'
+      if(userSave[a.id] === true){
+        correctButtonClass += ' selected'
+      }
+      if(userSave[a.id] === false){
+        wrongButtonClass += ' selected'
+      }
+
       return <tr>
         <td>{a.simplified}</td>
         <td><a href={dictUrl}>{a.traditional}</a></td>
         <td className="pinyin">{a.pinyin}</td>
+        <td className={correctButtonClass} data-value={a.id} onClick={this.handleCorrectClick}>✅</td>
+        <td className={wrongButtonClass} data-value={a.id} onClick={this.handleWrongClick}>❌</td>
       </tr>
     })
 
     return (
       <div className="character-list">
         {nbVocabAfterFilter} / {nbVocab}
-        <ul>{list}</ul>
+        <table>{list}</table>
       </div>
     )
+  }
+
+  handleCorrectClick(e){
+    var id = e.target.getAttribute('data-value')
+    var newSave = this.state.userSave
+    newSave[id] = true
+    this.setState({ userSave : newSave })
+    setSaveForUser(this.props.user, this.props.level, newSave)
+  }
+
+  handleWrongClick(e){
+    var id = e.target.getAttribute('data-value')
+    var newSave = this.state.userSave
+    newSave[id] = false
+    this.setState({ userSave : newSave })
+    setSaveForUser(this.props.user, this.props.level, newSave)
+
   }
 }
 
@@ -91,6 +133,26 @@ class LevelSelect extends React.Component {
   handleClick(e) {
     this.props.onSelect(e.target.value);
   }
+}
+
+function getSaveForUser (user, level) {
+  var save = localStorage.getItem(user+level)
+  if(!save){
+    return {}
+  }
+
+  if(typeof save === 'string'){
+    save = JSON.parse(save)
+  }
+  if(typeof save === 'object'){
+    return save
+  }
+  return {}
+}
+
+function setSaveForUser(user, level, save) {
+  console.log('save for user', user, level, save)
+  localStorage.setItem(user+level, JSON.stringify(save));
 }
 
 export default Main
