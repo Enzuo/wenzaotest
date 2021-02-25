@@ -2,13 +2,24 @@
 // const OpenCC = require('opencc');
 const Chinese = require('chinese-s2t')
 
-const hskvoc = [
+const rawhskvoc = [
   require('./data/hsk-level-1.json'), 
   require('./data/hsk-level-2.json'), 
   require('./data/hsk-level-3.json'), 
   require('./data/hsk-level-4.json'), 
   require('./data/hsk-level-5.json')
 ]
+
+const hskvoc = rawhskvoc.map(function(lvl){
+  return lvl.map(function(a){
+    var simplified = a.hanzi
+    var pinyin = a.pinyin
+    // var traditional = hanzitools.traditionalize(simplified);
+    var traditional = Chinese.s2t(simplified)
+    var isDifferent = simplified !== traditional
+    return { id : a.id, simplified, traditional, isDifferent, pinyin }
+  })
+})
 
 
 // var vocab = hskvoc.map(function(a){
@@ -31,16 +42,7 @@ const hskvoc = [
 
 function getVocabForLevel (level) {
   var voc = hskvoc[level-1]
-  console.log(level)
-
-  return voc.map(function(a){
-    var simplified = a.hanzi
-    var pinyin = a.pinyin
-    // var traditional = hanzitools.traditionalize(simplified);
-    var traditional = Chinese.s2t(simplified)
-    var isDifferent = simplified !== traditional
-    return { simplified, traditional, isDifferent, pinyin }
-  })
+  return voc
 }
 
 const hskTool = {
