@@ -76,17 +76,25 @@ class CharacterList extends React.Component {
       }
 
       return <tr>
-        <td>{a.simplified}</td>
-        <td><a href={dictUrl}>{a.traditional}</a></td>
+        <td className="simp">{a.simplified}</td>
+        <td className="trad"><a href={dictUrl}>{a.traditional}</a></td>
         <td className="pinyin">{a.pinyin}</td>
         <td className={correctButtonClass} data-value={a.id} onClick={this.handleCorrectClick}>✅</td>
         <td className={wrongButtonClass} data-value={a.id} onClick={this.handleWrongClick}>❌</td>
       </tr>
     })
 
+
+    var nbAnswers = 0
+    for (const [key, value] of Object.entries(userSave)) {
+      if(value === true) nbAnswers++
+    }
+
+    var percent = Math.floor(nbAnswers/nbVocabAfterFilter * 100)
+
     return (
       <div className="character-list">
-        {nbVocabAfterFilter} / {nbVocab}
+        <span>{nbVocabAfterFilter} / {nbVocab}</span> - <span className="score">{percent}%</span>
         <table>{list}</table>
       </div>
     )

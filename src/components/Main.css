@@ -47,3 +47,9 @@ a {
 .buttons.selected {
   opacity: 100%;
 }
+
+.score {
+  font-size: 20px;
+  font-weight: bolder;
+  color: green;
+}
