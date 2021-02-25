@@ -19,7 +19,7 @@
 }
 
 .character-list {
-  width: 500px;
+  width: 700px;
   margin: 0 auto;
 }
 
@@ -52,4 +52,20 @@ a {
   font-size: 20px;
   font-weight: bolder;
   color: green;
+}
+
+.simp, .pinyin {
+  opacity: 5%;
+}
+
+.trad:hover ~ .simp, .trad:hover ~ .pinyin{
+  opacity: 100%;
+}
+
+table {
+  width: 100%;
+}
+
+tr:nth-child(even) {
+  background: #fbfbfb
 }

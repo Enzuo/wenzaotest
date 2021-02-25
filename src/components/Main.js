@@ -76,8 +76,8 @@ class CharacterList extends React.Component {
       }
 
       return <tr>
-        <td className="simp">{a.simplified}</td>
         <td className="trad"><a href={dictUrl}>{a.traditional}</a></td>
+        <td className="simp">{a.simplified}</td>
         <td className="pinyin">{a.pinyin}</td>
         <td className={correctButtonClass} data-value={a.id} onClick={this.handleCorrectClick}>✅</td>
         <td className={wrongButtonClass} data-value={a.id} onClick={this.handleWrongClick}>❌</td>
