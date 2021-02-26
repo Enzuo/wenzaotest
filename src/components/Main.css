@@ -39,6 +39,9 @@ a {
 .buttons {
   opacity: 20%;
   cursor: pointer;
+  -webkit-transition: opacity 0.2s ease-in-out;
+  -moz-transition: opacity 0.2s ease-in-out;
+  transition: opacity 0.2s ease-in-out;
 }
 
 .buttons:hover {
@@ -56,6 +59,9 @@ a {
 
 .simp, .pinyin {
   opacity: 5%;
+  -webkit-transition: opacity 0.2s ease-in-out;
+  -moz-transition: opacity 0.2s ease-in-out;
+  transition: opacity 0.2s ease-in-out;
 }
 
 .trad:hover ~ .simp, .trad:hover ~ .pinyin{
