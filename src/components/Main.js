@@ -6,7 +6,7 @@ import hskTool from '../hsktool.js'
 class Main extends React.Component {
   constructor(props) {
     super(props)
-    this.state = { selectedLevel: 1, user : 'enzo' }
+    this.state = { selectedLevel: 1, user : '' }
 
     this.handleLevelSelect = this.handleLevelSelect.bind(this);
     this.handleUserChange = this.handleUserChange.bind(this);
