@@ -95,17 +95,22 @@ class CharacterList extends React.Component {
 
       var correctButtonClass = 'buttons'
       var wrongButtonClass = 'buttons'
+      var wordClass = ''
       if(userSave[a.id] === true){
         correctButtonClass += ' selected'
       }
       if(userSave[a.id] === false){
         wrongButtonClass += ' selected'
       }
+      if(userSave[a.id] === undefined){
+        wordClass = ' hidden'
+      }
+
 
       return <tr>
         <td className="trad"><a href={dictUrl}>{a.traditional}</a></td>
-        <td className="simp">{a.simplified}</td>
-        <td className="pinyin">{a.pinyin}</td>
+        <td className={"simp" + wordClass}>{a.simplified}</td>
+        <td className={"pinyin" + wordClass}>{a.pinyin}</td>
         <td className={correctButtonClass} data-value={a.id} onClick={this.handleCorrectClick}>✅</td>
         <td className={wrongButtonClass} data-value={a.id} onClick={this.handleWrongClick}>❌</td>
       </tr>

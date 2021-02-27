@@ -58,10 +58,12 @@ a {
 }
 
 .simp, .pinyin {
-  opacity: 5%;
   -webkit-transition: opacity 0.2s ease-in-out;
   -moz-transition: opacity 0.2s ease-in-out;
   transition: opacity 0.2s ease-in-out;
+}
+.hidden{
+  opacity: 2%;
 }
 
 .trad:hover ~ .simp, .trad:hover ~ .pinyin{
