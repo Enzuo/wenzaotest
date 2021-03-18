@@ -1,6 +1,6 @@
 import React, { Component, useState } from 'react'
 import mdParser from '../utils/mdParser.js'
-import {generateVocabTest} from '../utils/fuxi.js'
+import {generateVocabTest} from '../utils/learning.js'
 import styled from 'styled-components'
 import './Exam.css'
 
@@ -27,12 +27,12 @@ export default class Exam extends Component {
 
     var { testCards, currentCard, totalScore } = this.state
 
+    if(currentCard === null){
+      return <div>{totalScore}</div>
+    }
+
     var card = testCards[currentCard]
 
-
-    // var viewList = testList.map(a => {
-    //   return <Vocab d={a}></Vocab>
-    // })
     return (
       <div>
         {totalScore}
@@ -47,9 +47,15 @@ export default class Exam extends Component {
   }
 
   handleAnswer = (card, isRight) => {
-    var { currentCard, totalScore } = this.state
+    var { testCards, currentCard, totalScore } = this.state
+
+    var newCardIndex = currentCard + 1
+    if(newCardIndex >= testCards.length ){
+      newCardIndex = null
+    }
+    
     this.setState({
-      currentCard : currentCard + 1,
+      currentCard : newCardIndex,
       totalScore : totalScore += isRight ? 10 : 5,
     })
   }
@@ -62,13 +68,12 @@ const Card = styled.div`
   margin:10px
 `
 
-
 function TestCard (props){
   const [isAnswerVisible, setIsAnswerVisible] = useState(false);
   const {onWrong, onRight} = props
 
-  var correctButton = isAnswerVisible ? <button onClick={() => onRight(props.d)}>✅Correct</button> : null
-  var wrongButton = isAnswerVisible ? <button onClick={() => onWrong(props.d)}>❌Wrong</button> : null
+  var correctButton = <button disabled={!isAnswerVisible} onClick={() => onRight(props.d)}>✅Correct</button>
+  var wrongButton = <button disabled={!isAnswerVisible}  onClick={() => onWrong(props.d)}>❌Wrong</button>
 
   return (
     <Card>
@@ -81,51 +86,23 @@ function TestCard (props){
   )
 }
 
-const StyledLine = styled.div`
-  margin: 20px;
-  font-size: 32px;
-  color: black;
-`;
-
 function CardElement(props){
   var {d, k, showAnswer} = props
   var testOn = 'traditional'
   var isTestedElement = k === testOn
   var element = d[k]
-  element = isTestedElement && !showAnswer ? null : element
+  var className = k + (isTestedElement && !showAnswer ? ' hide' : '')
 
   return (
-    <div className={k}>
+    <div className={className}>
       {element}
     </div>
   )
 }
 
-function Vocab (props) {
-  const [viewAnswer, setViewAnswer] = useState(false);
-
-  var {traditional, pinyin} = props.d
-
-  console.log(pinyin)
-
-  var answer = viewAnswer ? traditional : ''
-
-  return (
-    <StyledLine>
-      {pinyin}
-      {answer}
-      <button onClick={() => setViewAnswer(true)}>View</button>
-    </StyledLine>
-  )
-}
-
-
 // User save
+// vocabulary : 
 // [
 //   id : simplified
-//   rating : {
-//     writingTrad : [0.5,'20210317',3]
-//     tone : [0.2,'2021'
-//   } 
-  
+//   writing : [[date, score]]
 // ]

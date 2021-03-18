@@ -26,6 +26,12 @@ export function generateVocabTest (vocabList) {
   return list
 }
 
+/* saveResult('我‘，2，’writing') */
+export function saveResult (id, score, type) {
+
+
+}
+
 
 export default {
   generateVocabTest
