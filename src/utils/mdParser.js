@@ -1,4 +1,4 @@
-import book3lesson1 from '../data/book3lesson1.md'
+import book3lesson1 from '../data/book3lesson2.md'
 var remark = require('remark')
 var markdown = require('remark-parse')
 const marked = require("marked")

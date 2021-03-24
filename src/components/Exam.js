@@ -1,6 +1,7 @@
 import React, { Component, useState } from 'react'
 import mdParser from '../utils/mdParser.js'
-import {generateVocabTest} from '../utils/learning.js'
+import learning, {generateVocabTest, addAnswer} from '../utils/learning.js'
+import { ANSWERS } from '../utils/constants'
 import styled from 'styled-components'
 import './Exam.css'
 
@@ -53,7 +54,14 @@ export default class Exam extends Component {
     if(newCardIndex >= testCards.length ){
       newCardIndex = null
     }
-    
+
+    if(this.props.onGetAnswer) {
+      this.props.onGetAnswer({
+        key : card.simplified, 
+        answer : isRight ? ANSWERS.CORRECT : ANSWERS.WRONG,
+      })
+    }
+
     this.setState({
       currentCard : newCardIndex,
       totalScore : totalScore += isRight ? 10 : 5,
