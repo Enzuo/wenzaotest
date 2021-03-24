@@ -1,9 +1,9 @@
 
 import React from 'react'
-import './Main.css'
+import './TestList.css'
 import hskTool from '../hsktool.js'
 
-class Main extends React.Component {
+class TestList extends React.Component {
   constructor(props) {
     super(props)
     this.state = { 
@@ -181,4 +181,4 @@ function saveForUser(user, level, save) {
   localStorage.setItem(user+level, JSON.stringify(save));
 }
 
-export default Main
+export default TestList
