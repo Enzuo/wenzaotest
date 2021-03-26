@@ -1,12 +1,11 @@
 import './App.css';
 import './reset.css';
-import Main from './components/Main.js'
-import Exam from './components/Exam';
+import Main from './components/Main'
 
 function App() {
   return (
     <div className="App">
-        <Exam></Exam>
+        <Main></Main>
     </div>
   );
 }

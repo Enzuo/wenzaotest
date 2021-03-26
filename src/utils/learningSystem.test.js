@@ -1,4 +1,4 @@
-import { calculateVocabularyScoreFromHistory } from './learning'
+import { calculateVocabularyScoreFromHistory } from './learningSystem'
 
 
 

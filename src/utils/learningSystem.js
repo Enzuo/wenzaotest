@@ -53,10 +53,10 @@ export function addAnswer (state, key, answer) {
 
 /**
  * 
- * @param {*} vocStats 
+ * @param {*} vocArr 
  */
-export function calculateVocabularyScoreFromHistory(vocStats) {
-  return vocStats.map(st => {
+export function calculateVocabularyScoreFromHistory(vocArr) {
+  return vocArr.map(st => {
     var state = {
       score : 0
     }

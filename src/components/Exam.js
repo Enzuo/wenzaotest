@@ -1,6 +1,6 @@
 import React, { Component, useState } from 'react'
 import mdParser from '../utils/mdParser.js'
-import learning, {generateVocabTest, addAnswer} from '../utils/learning.js'
+import learning, {generateVocabTest, addAnswer} from '../utils/learningSystem.js'
 import { ANSWERS } from '../utils/constants'
 import styled from 'styled-components'
 import './Exam.css'
@@ -55,8 +55,8 @@ export default class Exam extends Component {
       newCardIndex = null
     }
 
-    if(this.props.onGetAnswer) {
-      this.props.onGetAnswer({
+    if(this.props.onAnswer) {
+      this.props.onAnswer({
         key : card.simplified, 
         answer : isRight ? ANSWERS.CORRECT : ANSWERS.WRONG,
       })
