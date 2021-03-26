@@ -1,4 +1,4 @@
-import { calculateVocabularyScoreFromHistory } from './learningSystem'
+import { calculateVocabularyScoreFromHistory, getSpacedRepetitionIndex } from './learningSystem'
 
 
 
@@ -10,22 +10,32 @@ test('calculate vocabulary score', () => {
   var userStats = [
     {
       key : '我',
-      answersHistory : [['20210315', ANSWERS.EASY], ['20210321', ANSWERS.WRONG]]
+      answersHistory : [['2021-03-15', ANSWERS.EASY], ['2021-03-21', ANSWERS.WRONG]]
     },
     {
       key : '说',
-      answersHistory : [['20210315', ANSWERS.CORRECT], ['20210321', ANSWERS.WRONG], ['20210324', ANSWERS.CORRECT]]
+      answersHistory : [['2021-03-15', ANSWERS.CORRECT], ['2021-03-21', ANSWERS.WRONG], ['2021-03-24', ANSWERS.CORRECT]]
     },
     {
       key : '中文',
-      answersHistory : [['20210315', ANSWERS.EASY], ['20210316', ANSWERS.EASY], ['20210317', ANSWERS.EASY]]
+      answersHistory : [['2021-03-15', ANSWERS.EASY], ['2021-03-16', ANSWERS.EASY], ['2021-03-17', ANSWERS.EASY]]
     },
   ]
 
   var result = calculateVocabularyScoreFromHistory(userStats)
 
   console.log(result)
+})
 
+test.only('return vocabulary space repetition index', () => {
+  var voc = {
+    key : '我',
+    answersHistory : [['2021-03-15', ANSWERS.EASY], ['2021-03-21', ANSWERS.WRONG]],
+    score : 5
+  }
 
-
-});
+  expect(getSpacedRepetitionIndex('2021-03-24', voc.score, '2021-03-21')).toBe(1)
+  expect(getSpacedRepetitionIndex('2021-03-24', voc.score, '2021-03-22')).toBe(0.6)
+  expect(getSpacedRepetitionIndex('2021-03-24', voc.score, '2021-03-20')).toBe(1.3)
+  expect(getSpacedRepetitionIndex('2021-03-24', 8, '2021-03-19')).toBe(1)
+})

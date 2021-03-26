@@ -96,6 +96,22 @@ function calculateVocabularyScore(state, answer){
   return state
 }
 
+export function getSpacedRepetitionIndex(currentDate, score, lastDate){
+  var nmlzedCurrentDate = new Date(currentDate)
+  var nmlzedLastDate = new Date(lastDate)
+  var timePassedTS = nmlzedCurrentDate - nmlzedLastDate
+  var timePassedDays = timePassedTS / 1000 / 3600 / 24
+
+  // Use Fibonnaci 
+  var FibonnaciRatio = ((1 + Math.sqrt(5)) / 2.0)
+  var nextScore = score * FibonnaciRatio
+  var scoreDiff = nextScore - score
+  console.log(nmlzedCurrentDate, nmlzedLastDate, timePassedDays, FibonnaciRatio)
+
+  // 
+  return parseFloat((timePassedDays / scoreDiff).toFixed(1))
+}
+
 export default {
   generateVocabTest,
   addAnswer
