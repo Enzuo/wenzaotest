@@ -18,14 +18,30 @@ function getPinyin(char){
 }
 
 
-export function generateVocabTest (vocabList) {
+export function pickVocabList (vocabList, count) {
+  count = 10
+  return pickRandom(vocabList, {count});
+}
 
-  var listWords = pickRandom(vocabList, {count: 10});
-  var list = listWords.map((a) => {
+export function generateTestCards (vocabList) {
+  return vocabList.map((a) => {
     return {simplified : a, traditional : Chinese.s2t(a), pinyin : getPinyin(a)}
   })
+}
 
-  return list
+
+
+export function addSpacedRepetitionIndex(userVocab) {
+  return  userVocab.map(voc => {
+    var today = Date()
+    var lastAnswer = voc.answersHistory[voc.answersHistory.length-1]
+    return {...voc, spIndex : getSpacedRepetitionIndex(today, voc.score, lastAnswer[0])}
+  })
+}
+
+export function getVocabToReview(userVocabWithspIndex, number){
+  var userVocabSorted = userVocabWithspIndex.sort((a, b) => a.spIndex - b.spIndex)
+  return userVocabSorted.slice(0, number)
 }
 
 export function addAnswer (vocArray, key, answerResult) {
@@ -70,7 +86,7 @@ export function calculateVocabularyScoreFromHistory(vocArr) {
 /**
  * 
  * @param {Object} state {score, }
- * @param {Object} answer {date, answer}
+ * @param {Array} answer [date, answerResult]
  */
 function calculateVocabularyScore(state, answer, lastAnswer){
   var answerDate = answer[0]
@@ -154,6 +170,7 @@ function updateEFactor(efactor, answerResult){
 }
 
 export default {
-  generateVocabTest,
-  addAnswer
+  pickVocabList,
+  addAnswer,
+  generateTestCards,
 }

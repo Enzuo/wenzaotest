@@ -1,6 +1,6 @@
 import React, { Component, useState } from 'react'
 import mdParser from '../utils/mdParser.js'
-import learning, {generateVocabTest, addAnswer} from '../utils/learningSystem.js'
+import learningSystem from '../utils/learningSystem.js'
 import { ANSWERS } from '../utils/constants'
 import styled from 'styled-components'
 import './Exam.css'
@@ -13,11 +13,12 @@ export default class Exam extends Component {
   constructor(props){
   	super(props)
 
-    var vocabList = mdParser.getVocabulary()
+    var vocabList = learningSystem.pickVocabList(mdParser.getVocabulary())
+
 
     this.state = {
       currentCard : 0,
-      testCards : generateVocabTest(vocabList),
+      testCards : learningSystem.generateTestCards(vocabList),
       totalScore : 0
     }
 
@@ -40,14 +41,13 @@ export default class Exam extends Component {
         <TestCard 
           key={currentCard}
           d={card} 
-          onRight={(d) => {this.handleAnswer(d, true)}}
-          onWrong={(d) => {this.handleAnswer(d, false)}}
+          onAnswer={(d, a) => {this.handleAnswer(d, a)}}
         ></TestCard>
       </div>
     )
   }
 
-  handleAnswer = (card, isRight) => {
+  handleAnswer = (card, answer) => {
     var { testCards, currentCard, totalScore } = this.state
 
     var newCardIndex = currentCard + 1
@@ -58,13 +58,13 @@ export default class Exam extends Component {
     if(this.props.onAnswer) {
       this.props.onAnswer({
         key : card.simplified, 
-        answer : isRight ? ANSWERS.CORRECT : ANSWERS.WRONG,
+        answer
       })
     }
 
     this.setState({
       currentCard : newCardIndex,
-      totalScore : totalScore += isRight ? 10 : 5,
+      totalScore : totalScore += answer === ANSWERS.CORRECT ? 10 : 5,
     })
   }
 }
@@ -78,10 +78,10 @@ const Card = styled.div`
 
 function TestCard (props){
   const [isAnswerVisible, setIsAnswerVisible] = useState(false);
-  const {onWrong, onRight} = props
+  const {onAnswer} = props
 
-  var correctButton = <button disabled={!isAnswerVisible} onClick={() => onRight(props.d)}>✅Correct</button>
-  var wrongButton = <button disabled={!isAnswerVisible}  onClick={() => onWrong(props.d)}>❌Wrong</button>
+  var correctButton = <button disabled={!isAnswerVisible} onClick={() => onAnswer(props.d, ANSWERS.CORRECT)}>✅Correct</button>
+  var wrongButton = <button disabled={!isAnswerVisible}  onClick={() => onAnswer(props.d, ANSWERS.WRONG)}>❌Wrong</button>
 
   return (
     <Card>
