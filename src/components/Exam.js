@@ -13,12 +13,12 @@ export default class Exam extends Component {
   constructor(props){
   	super(props)
 
-    var vocabList = learningSystem.pickVocabList(mdParser.getVocabulary())
+    // var vocabList = learningSystem.pickVocabList(mdParser.getVocabulary())
 
 
     this.state = {
       currentCard : 0,
-      testCards : learningSystem.generateTestCards(vocabList),
+      // testCards : learningSystem.generateTestCards(vocabList),
       totalScore : 0
     }
 
@@ -27,11 +27,14 @@ export default class Exam extends Component {
 
   render() {
 
-    var { testCards, currentCard, totalScore } = this.state
+    var { currentCard, totalScore } = this.state
+    var { vocabList } = this.props
 
     if(currentCard === null){
       return <div>{totalScore}</div>
     }
+
+    var testCards = learningSystem.generateTestCards(vocabList)
 
     var card = testCards[currentCard]
 
@@ -48,10 +51,12 @@ export default class Exam extends Component {
   }
 
   handleAnswer = (card, answer) => {
-    var { testCards, currentCard, totalScore } = this.state
+    var { currentCard, totalScore } = this.state
+    var { vocabList } = this.props
+
 
     var newCardIndex = currentCard + 1
-    if(newCardIndex >= testCards.length ){
+    if(newCardIndex >= vocabList.length ){
       newCardIndex = null
     }
 

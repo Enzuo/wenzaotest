@@ -18,7 +18,7 @@ function getPinyin(char){
 }
 
 
-export function pickVocabList (vocabList, count) {
+export function pickVocabulary (vocabList, count) {
   count = 10
   return pickRandom(vocabList, {count});
 }
@@ -31,7 +31,7 @@ export function generateTestCards (vocabList) {
 
 
 
-export function addSpacedRepetitionIndex(userVocab) {
+export function updateSpacedRepetitionIndex(userVocab) {
   return  userVocab.map(voc => {
     var today = Date()
     var lastAnswer = voc.answersHistory[voc.answersHistory.length-1]
@@ -94,15 +94,17 @@ function calculateVocabularyScore(state, answer, lastAnswer){
   var { score, efactor } = state
   efactor = updateEFactor(efactor, answerResult)
   var lastAnswerDate = lastAnswer ? lastAnswer[0] : null
-  var defaultScore = 0.9
-  var daysScore = lastAnswerDate ? getDaysBetween(answerDate, lastAnswerDate) : defaultScore
+  var defaultScore = 1
+  var daysScore = getDaysBetween(answerDate, lastAnswerDate)
 
   switch(answerResult){
     case ANSWERS.EASY:
       score = score + (daysScore * 2 * efactor)
+      score = Math.max(score, defaultScore * 2)
       break
     case ANSWERS.CORRECT:
       score = score + (daysScore * efactor)
+      score = Math.max(score, defaultScore)
       break
     case ANSWERS.WRONG:
       score = score / (2 / efactor)
@@ -170,7 +172,8 @@ function updateEFactor(efactor, answerResult){
 }
 
 export default {
-  pickVocabList,
+  pickVocabulary,
   addAnswer,
   generateTestCards,
+  updateSpacedRepetitionIndex,
 }
