@@ -13,6 +13,10 @@ test('calculate vocabulary score', () => {
       answersHistory : [['2021-03-15', ANSWERS.EASY], ['2021-03-21', ANSWERS.WRONG]]
     },
     {
+      key : '可以',
+      answersHistory : [['2021-03-15', ANSWERS.EASY], ['2021-04-15', ANSWERS.CORRECT]]
+    },
+    {
       key : '说',
       answersHistory : [['2021-03-15', ANSWERS.CORRECT], ['2021-03-21', ANSWERS.WRONG], ['2021-03-24', ANSWERS.CORRECT]]
     },
@@ -27,7 +31,7 @@ test('calculate vocabulary score', () => {
   console.log(result)
 })
 
-test.only('return vocabulary space repetition index', () => {
+test('return vocabulary space repetition index (fibonacci', () => {
   var voc = {
     key : '我',
     answersHistory : [['2021-03-15', ANSWERS.EASY], ['2021-03-21', ANSWERS.WRONG]],

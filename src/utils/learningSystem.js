@@ -58,13 +58,13 @@ export function addAnswer (state, key, answer) {
 export function calculateVocabularyScoreFromHistory(vocArr) {
   return vocArr.map(st => {
     var state = {
-      score : 0
+      ...st,
+      score : 0,
     }
     for(var i=0; i<st.answersHistory.length; i++){
-      state = calculateVocabularyScore(state , st.answersHistory[i])
+      state = calculateVocabularyScore(state , st.answersHistory[i], st.answersHistory[i-1])
     }
-    st.score = state.score
-    return st
+    return state
   })
 }
 
@@ -73,43 +73,84 @@ export function calculateVocabularyScoreFromHistory(vocArr) {
  * @param {Object} state {score, }
  * @param {Object} answer {date, answer}
  */
-function calculateVocabularyScore(state, answer){
+function calculateVocabularyScore(state, answer, lastAnswer){
   // TODO spaced repetition logic to award points
-  var { score } = state
-  switch(answer[1]){
+  var answerDate = answer[0]
+  var answerResult = answer[1]
+  var { score, efactor } = state
+  efactor = updateEFactor(efactor, answerResult)
+  var lastAnswerDate = lastAnswer ? lastAnswer[0] : null
+  var daysScore = getDaysBetween(answerDate, lastAnswerDate)
+
+  switch(answerResult){
     case ANSWERS.EASY:
-      score = score + 2
+      score = score + (daysScore * 2 * efactor)
       break
     case ANSWERS.CORRECT:
-      score = score + 1 
+      score = score + (daysScore * efactor)
       break
     case ANSWERS.WRONG:
-      score = score - 1
+      score = score / (2 / efactor)
       break
     case ANSWERS.HARD:
-      score = score - 2
+      score = 1
       break
     default:
       return state
   } 
   state.score = score
+  state.efactor = efactor
   return state
 }
 
 export function getSpacedRepetitionIndex(currentDate, score, lastDate){
-  var nmlzedCurrentDate = new Date(currentDate)
-  var nmlzedLastDate = new Date(lastDate)
-  var timePassedTS = nmlzedCurrentDate - nmlzedLastDate
-  var timePassedDays = timePassedTS / 1000 / 3600 / 24
+  var timePassedDays = getDaysBetween(currentDate, lastDate)
 
-  // Use Fibonnaci 
+  // Use Fibonacci 
   var FibonnaciRatio = ((1 + Math.sqrt(5)) / 2.0)
   var nextScore = score * FibonnaciRatio
   var scoreDiff = nextScore - score
-  console.log(nmlzedCurrentDate, nmlzedLastDate, timePassedDays, FibonnaciRatio)
 
-  // 
   return parseFloat((timePassedDays / scoreDiff).toFixed(1))
+}
+
+function getDaysBetween(date1, date2){
+  if(!date1 || !date2 ){
+    return 0
+  }
+  var nmlzedCurrentDate = new Date(date1)
+  var nmlzedLastDate = new Date(date2)
+  var timePassedTS = Math.abs(nmlzedCurrentDate - nmlzedLastDate)
+  var timePassedDays = timePassedTS / 1000 / 3600 / 24
+
+  return timePassedDays
+}
+
+// With fibonacci number suite
+// for a score of 80 days we will see it 10 times, this gives use a efactor of 1.5
+// [1,2,3,5,8,13,21,34,55,]
+function updateEFactor(efactor, answerResult){
+  if(!efactor){
+    efactor = 1
+  }
+  switch(answerResult){
+    case ANSWERS.EASY:
+      efactor = efactor * 1.2
+      break
+    case ANSWERS.CORRECT:
+      efactor = efactor * 1.04
+      break
+    case ANSWERS.WRONG:
+      efactor = efactor / 1.1
+      break
+    case ANSWERS.HARD:
+      efactor = efactor / 1.2
+      break
+    default:
+      return efactor
+  }
+  // return efactor
+  return Math.max(Math.min(efactor, 3),0.3)
 }
 
 export default {
