@@ -1,6 +1,6 @@
 export const ANSWERS = {
-  HARD : -2,
-  WRONG : -1,
-  CORRECT : 1,
-  EASY : 2,
+  HARD : 1,
+  WRONG : 2,
+  CORRECT : 3,
+  EASY : 4,
 }

@@ -28,27 +28,26 @@ export function generateVocabTest (vocabList) {
   return list
 }
 
-/* saveResult('我‘，2，’writing') */
-export function saveResult (id, score, type) {
-
-
-}
-
-export function addAnswer (state, key, answer) {
+export function addAnswer (vocArray, key, answerResult) {
   var date = Date() 
-  var voc = state.find(a => a.key === key)
+  var answer = [date, answerResult]
+  var voc = vocArray.find(a => a.key === key)
   
   if(!voc){
     voc = {
       key,
-      answersHistory : [[date, answer]]
+      answersHistory : [answer],
+      score : 0
     }
-    state.push(voc)
-    return state
+    voc = calculateVocabularyScore(voc, answer)
+    vocArray.push(voc)
+    return vocArray
   }
 
-  voc.answersHistory.push([date, answer])
-  return state
+  var lastAnswer = voc.answersHistory[voc.answersHistory.length-1]
+  voc = calculateVocabularyScore(voc, answer, lastAnswer)
+  voc.answersHistory.push(answer)
+  return vocArray
 }
 
 /**
@@ -74,13 +73,13 @@ export function calculateVocabularyScoreFromHistory(vocArr) {
  * @param {Object} answer {date, answer}
  */
 function calculateVocabularyScore(state, answer, lastAnswer){
-  // TODO spaced repetition logic to award points
   var answerDate = answer[0]
   var answerResult = answer[1]
   var { score, efactor } = state
   efactor = updateEFactor(efactor, answerResult)
   var lastAnswerDate = lastAnswer ? lastAnswer[0] : null
-  var daysScore = getDaysBetween(answerDate, lastAnswerDate)
+  var defaultScore = 0.9
+  var daysScore = lastAnswerDate ? getDaysBetween(answerDate, lastAnswerDate) : defaultScore
 
   switch(answerResult){
     case ANSWERS.EASY:
@@ -98,6 +97,7 @@ function calculateVocabularyScore(state, answer, lastAnswer){
     default:
       return state
   } 
+
   state.score = score
   state.efactor = efactor
   return state
@@ -135,16 +135,16 @@ function updateEFactor(efactor, answerResult){
   }
   switch(answerResult){
     case ANSWERS.EASY:
-      efactor = efactor * 1.2
+      efactor = efactor * 1.1
       break
     case ANSWERS.CORRECT:
       efactor = efactor * 1.04
       break
     case ANSWERS.WRONG:
-      efactor = efactor / 1.1
+      efactor = efactor * 0.9
       break
     case ANSWERS.HARD:
-      efactor = efactor / 1.2
+      efactor = efactor * 0.8
       break
     default:
       return efactor
