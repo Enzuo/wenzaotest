@@ -176,4 +176,5 @@ export default {
   addAnswer,
   generateTestCards,
   updateSpacedRepetitionIndex,
+  getVocabToReview,
 }

@@ -18,13 +18,20 @@ export default class Main extends Component {
   }
 
   render() {
-    var {examVocab} = this.state
+    var {examVocab, userVocabulary} = this.state
 
     if(!examVocab){
+      userVocabulary = learningSystem.updateSpacedRepetitionIndex(userVocabulary)
+      var nbToReview = userVocabulary.reduce((acc, a) => {
+        if(a.spIndex > 1){
+          acc += 1
+        }
+        return acc
+      }, 0)
       return (
         <div>
           <button onClick={this.startNewVocabulary}>New vocab</button>
-          <button onClick={this.startReviewVocabulary}>Review</button>
+          <button onClick={this.startReviewVocabulary}>Review {nbToReview}</button>
         </div>
       )
     }
@@ -40,7 +47,9 @@ export default class Main extends Component {
   }
 
   startReviewVocabulary = (e) => {
-
+    var vocabToReview = learningSystem.getVocabToReview(this.state.userVocabulary)
+    var examVocab = vocabToReview.map(a => a.key)
+    this.setState({ examVocab })
   }
 
   handleAnswer = (a) => {
