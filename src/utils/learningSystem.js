@@ -7,6 +7,14 @@ const Chinese = require('chinese-s2t')
 // var hanzi = require('hanzi')
 // hanzi.start()
 
+const EFACTOR = {}
+EFACTOR[ANSWERS.EASY] = 1.1
+EFACTOR[ANSWERS.CORRECT] = 1.04
+EFACTOR[ANSWERS.WRONG] = 0.9
+EFACTOR[ANSWERS.HARD] = 0.8
+EFACTOR.MAX = 3
+EFACTOR.MIN = 0.3
+
 
 
 
@@ -45,10 +53,10 @@ export function getVocabToReview(userVocabWithspIndex, number){
 }
 
 export function addAnswer (vocArray, key, answerResult) {
-  var date = Date() 
+  var date = Date()
   var answer = [date, answerResult]
   var voc = vocArray.find(a => a.key === key)
-  
+
   if(!voc){
     voc = {
       key,
@@ -67,8 +75,8 @@ export function addAnswer (vocArray, key, answerResult) {
 }
 
 /**
- * 
- * @param {*} vocArr 
+ *
+ * @param {*} vocArr
  */
 export function calculateVocabularyScoreFromHistory(vocArr) {
   return vocArr.map(st => {
@@ -84,7 +92,7 @@ export function calculateVocabularyScoreFromHistory(vocArr) {
 }
 
 /**
- * 
+ *
  * @param {Object} state {score, }
  * @param {Array} answer [date, answerResult]
  */
@@ -96,15 +104,14 @@ function calculateVocabularyScore(state, answer, lastAnswer){
   var lastAnswerDate = lastAnswer ? lastAnswer[0] : null
   var defaultScore = 1
   var daysScore = getDaysBetween(answerDate, lastAnswerDate)
+  daysScore = Math.max(daysScore, defaultScore)
 
   switch(answerResult){
     case ANSWERS.EASY:
       score = score + (daysScore * 2 * efactor)
-      score = Math.max(score, defaultScore * 2)
       break
     case ANSWERS.CORRECT:
       score = score + (daysScore * efactor)
-      score = Math.max(score, defaultScore)
       break
     case ANSWERS.WRONG:
       score = score / (2 / efactor)
@@ -114,7 +121,7 @@ function calculateVocabularyScore(state, answer, lastAnswer){
       break
     default:
       return state
-  } 
+  }
 
   state.score = score
   state.efactor = efactor
@@ -124,7 +131,7 @@ function calculateVocabularyScore(state, answer, lastAnswer){
 export function getSpacedRepetitionIndex(currentDate, score, lastDate){
   var timePassedDays = getDaysBetween(currentDate, lastDate)
 
-  // Use Fibonacci 
+  // Use Fibonacci
   var FibonnaciRatio = ((1 + Math.sqrt(5)) / 2.0)
   var nextScore = score * FibonnaciRatio
   var scoreDiff = nextScore - score
@@ -151,24 +158,10 @@ function updateEFactor(efactor, answerResult){
   if(!efactor){
     efactor = 1
   }
-  switch(answerResult){
-    case ANSWERS.EASY:
-      efactor = efactor * 1.1
-      break
-    case ANSWERS.CORRECT:
-      efactor = efactor * 1.04
-      break
-    case ANSWERS.WRONG:
-      efactor = efactor * 0.9
-      break
-    case ANSWERS.HARD:
-      efactor = efactor * 0.8
-      break
-    default:
-      return efactor
-  }
+  efactor = efactor * EFACTOR[answerResult]
+
   // return efactor
-  return Math.max(Math.min(efactor, 3),0.3)
+  return Math.max(Math.min(efactor, EFACTOR.MAX),EFACTOR.MIN)
 }
 
 export default {
