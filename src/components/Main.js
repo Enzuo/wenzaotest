@@ -4,6 +4,8 @@ import mdParser from '../utils/mdParser.js'
 import Exam from './Exam'
 // import * as learningSystem from '../utils/learningSystem'
 
+const NEWVOCABNB = 10
+
 export default class Main extends Component {
   // static defaultProps = {}
 
@@ -43,7 +45,7 @@ export default class Main extends Component {
 
   startNewVocabulary = (e) => {
     var notInArray = this.state.userVocabulary.map(a => a.key)
-    var examVocab = learningSystem.pickVocabulary(this.state.lessonVocabulary, 1, notInArray)
+    var examVocab = learningSystem.pickVocabulary(this.state.lessonVocabulary, NEWVOCABNB, notInArray)
     this.setState({ examVocab })
   }
 

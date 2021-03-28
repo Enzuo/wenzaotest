@@ -1,5 +1,5 @@
 import { pinyin } from 'pinyin-pro'
-import { ANSWERS } from './constants.js'
+import { ANSWERS, EFACTOR } from './constants.js'
 
 const pickRandom = require('pick-random')
 const Chinese = require('chinese-s2t')
@@ -7,13 +7,7 @@ const Chinese = require('chinese-s2t')
 // var hanzi = require('hanzi')
 // hanzi.start()
 
-const EFACTOR = {}
-EFACTOR[ANSWERS.EASY] = 1.1
-EFACTOR[ANSWERS.CORRECT] = 1.04
-EFACTOR[ANSWERS.WRONG] = 0.9
-EFACTOR[ANSWERS.HARD] = 0.8
-EFACTOR.MAX = 3
-EFACTOR.MIN = 0.3
+
 
 
 
