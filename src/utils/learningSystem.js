@@ -26,9 +26,10 @@ function getPinyin(char){
 }
 
 
-export function pickVocabulary (vocabList, count) {
-  count = 10
-  return pickRandom(vocabList, {count});
+export function pickVocabulary (vocabList, count, notin) {
+  count = count || 10
+  var filteredVocabList = vocabList.filter(a => !notin.includes(a))
+  return pickRandom(filteredVocabList, {count});
 }
 
 export function generateTestCards (vocabList) {
@@ -40,6 +41,7 @@ export function generateTestCards (vocabList) {
 
 
 export function updateSpacedRepetitionIndex(userVocab) {
+  console.log('update spaced repetition index')
   return  userVocab.map(voc => {
     var today = Date()
     var lastAnswer = voc.answersHistory[voc.answersHistory.length-1]
@@ -48,7 +50,7 @@ export function updateSpacedRepetitionIndex(userVocab) {
 }
 
 export function getVocabToReview(userVocabWithspIndex, number){
-  var userVocabSorted = userVocabWithspIndex.sort((a, b) => a.spIndex - b.spIndex)
+  var userVocabSorted = userVocabWithspIndex.sort((a, b) => b.spIndex - a.spIndex)
   return userVocabSorted.slice(0, number)
 }
 
@@ -136,6 +138,9 @@ export function getSpacedRepetitionIndex(currentDate, score, lastDate){
   var nextScore = score * FibonnaciRatio
   var scoreDiff = nextScore - score
 
+  if(!scoreDiff) {
+    return Infinity
+  }
   return parseFloat((timePassedDays / scoreDiff).toFixed(1))
 }
 

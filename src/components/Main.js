@@ -10,9 +10,10 @@ export default class Main extends Component {
   constructor(props){
   	super(props)
 
+    var userVocabulary = JSON.parse(localStorage.getItem('userVocabulary')) || []
     this.state = {
       lessonVocabulary : mdParser.getVocabulary(),
-      userVocabulary : JSON.parse(localStorage.getItem('userVocabulary')) || [],
+      userVocabulary : learningSystem.updateSpacedRepetitionIndex(userVocabulary),
       examVocab : null,
     }
   }
@@ -21,7 +22,6 @@ export default class Main extends Component {
     var {examVocab, userVocabulary} = this.state
 
     if(!examVocab){
-      userVocabulary = learningSystem.updateSpacedRepetitionIndex(userVocabulary)
       var nbToReview = userVocabulary.reduce((acc, a) => {
         if(a.spIndex > 1){
           acc += 1
@@ -37,17 +37,19 @@ export default class Main extends Component {
     }
 
     return (
-      <Exam vocabList={examVocab} onAnswer={this.handleAnswer}></Exam>
+      <Exam vocabList={examVocab} onAnswer={this.handleAnswer} onEnd={this.handleTestEnd}></Exam>
     )
   }
 
   startNewVocabulary = (e) => {
-    var examVocab = learningSystem.pickVocabulary(this.state.lessonVocabulary, this.state.userVocabulary)
+    var notInArray = this.state.userVocabulary.map(a => a.key)
+    var examVocab = learningSystem.pickVocabulary(this.state.lessonVocabulary, 1, notInArray)
     this.setState({ examVocab })
   }
 
   startReviewVocabulary = (e) => {
     var vocabToReview = learningSystem.getVocabToReview(this.state.userVocabulary)
+    console.log(vocabToReview, vocabToReview)
     var examVocab = vocabToReview.map(a => a.key)
     this.setState({ examVocab })
   }
@@ -56,9 +58,19 @@ export default class Main extends Component {
     var {key, answer} = a
     console.log(key, answer)
     var {userVocabulary} = this.state
+    console.log(userVocabulary)
     this.setState({
       userVocabulary : learningSystem.addAnswer(userVocabulary, key, answer)
     })
     localStorage.setItem('userVocabulary', JSON.stringify(userVocabulary));
+  }
+
+  handleTestEnd = () => {
+    var userVocabUpdated = learningSystem.updateSpacedRepetitionIndex(this.state.userVocabulary)
+    console.log('userVocabUpdated', userVocabUpdated)
+    this.setState({
+      examVocab : null,
+      userVocabulary : userVocabUpdated
+    })
   }
 }

@@ -8,7 +8,10 @@ import './Exam.css'
 
 
 export default class Exam extends Component {
-  // static defaultProps = {}
+  static defaultProps = {
+    onAnswer : () => {},
+    onEnd : () => {},
+  }
 
   constructor(props){
   	super(props)
@@ -17,33 +20,33 @@ export default class Exam extends Component {
 
 
     this.state = {
-      currentCard : 0,
+      currentIndex : 0,
       // testCards : learningSystem.generateTestCards(vocabList),
       totalScore : 0
     }
 
-    
+
   }
 
   render() {
 
-    var { currentCard, totalScore } = this.state
+    var { currentIndex, totalScore } = this.state
     var { vocabList } = this.props
 
-    if(currentCard === null){
+    if(currentIndex === null){
       return <div>{totalScore}</div>
     }
 
     var testCards = learningSystem.generateTestCards(vocabList)
 
-    var card = testCards[currentCard]
+    var card = testCards[currentIndex]
 
     return (
       <div>
         {totalScore}
-        <TestCard 
-          key={currentCard}
-          d={card} 
+        <TestCard
+          key={currentIndex}
+          d={card}
           onAnswer={(d, a) => {this.handleAnswer(d, a)}}
         ></TestCard>
       </div>
@@ -51,24 +54,22 @@ export default class Exam extends Component {
   }
 
   handleAnswer = (card, answer) => {
-    var { currentCard, totalScore } = this.state
+    var { currentIndex, totalScore } = this.state
     var { vocabList } = this.props
 
+    this.props.onAnswer({
+      key : card.simplified,
+      answer
+    })
 
-    var newCardIndex = currentCard + 1
+    var newCardIndex = currentIndex + 1
     if(newCardIndex >= vocabList.length ){
       newCardIndex = null
-    }
-
-    if(this.props.onAnswer) {
-      this.props.onAnswer({
-        key : card.simplified, 
-        answer
-      })
+      this.props.onEnd()
     }
 
     this.setState({
-      currentCard : newCardIndex,
+      currentIndex : newCardIndex,
       totalScore : totalScore += answer === ANSWERS.CORRECT ? 10 : 5,
     })
   }
@@ -114,7 +115,7 @@ function CardElement(props){
 }
 
 // User save
-// vocabulary : 
+// vocabulary :
 // [
 //   id : simplified
 //   writing : [[date, score]]
