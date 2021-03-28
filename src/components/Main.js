@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import book3lesson1 from '../data/book3lesson2.md'
 import learningSystem from '../utils/learningSystem'
 import mdParser from '../utils/mdParser.js'
 import Exam from './Exam'
@@ -14,7 +15,7 @@ export default class Main extends Component {
 
     var userVocabulary = JSON.parse(localStorage.getItem('userVocabulary')) || []
     this.state = {
-      lessonVocabulary : mdParser.getVocabulary(),
+      lessonVocabulary : mdParser.parseLessonMarkdown(book3lesson1).vocabulary,
       userVocabulary : learningSystem.updateSpacedRepetitionIndex(userVocabulary),
       examVocab : null,
     }
