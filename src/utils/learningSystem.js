@@ -23,6 +23,7 @@ function getPinyin(char){
 export function pickVocabulary (vocabList, count, notin) {
   count = count || 10
   var filteredVocabList = vocabList.filter(a => !notin.includes(a))
+  count = Math.min(count, filteredVocabList.length)
   return pickRandom(filteredVocabList, {count});
 }
 
