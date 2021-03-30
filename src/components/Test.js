@@ -25,15 +25,13 @@ class SwitchOnOff extends Component {
 
   render() {
 
-    var count3 = <Counter></Counter>
-
     if(this.state.isOn){
       return (
         <div>
           <button onClick={this.handleSwitch}>Switch</button>
           <Counter></Counter>
+          <FunctionalCounter></FunctionalCounter>
           <Counter></Counter>
-          {count3}
         </div>
       )
     }
@@ -42,6 +40,8 @@ class SwitchOnOff extends Component {
       <div>
         <button onClick={this.handleSwitch}>Switch</button>
         <Counter></Counter>
+        <Counter></Counter>
+        <FunctionalCounter></FunctionalCounter>
       </div>
     )
   }
@@ -63,6 +63,7 @@ class Counter extends Component {
   }
 
   render () {
+    console.log('render counter', this.state.count)
     return (
       <div>
         <p>Count : {this.state.count}</p>
@@ -76,4 +77,17 @@ class Counter extends Component {
       count : this.state.count + 1
     })
   }
+}
+
+
+function FunctionalCounter (props) {
+  const [count, setCount] = React.useState(0);
+
+
+  return (
+    <div>
+    <p>Functional Count : {count}</p>
+    <button onClick={(e) => setCount(count+1)}>+</button>
+    </div>
+  )
 }
