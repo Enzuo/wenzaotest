@@ -3,6 +3,8 @@ import book3lesson1 from '../data/book3lesson2.md'
 import learningSystem from '../utils/learningSystem'
 import mdParser from '../utils/mdParser.js'
 import Exam from './Exam'
+import { CSVLink, CSVDownload } from "react-csv";
+
 // import * as learningSystem from '../utils/learningSystem'
 
 const NEWVOCABNB = 10
@@ -35,6 +37,7 @@ export default class Main extends Component {
         <div>
           <button onClick={this.startNewVocabulary}>New vocab</button>
           <button onClick={this.startReviewVocabulary}>Review {nbToReview}</button>
+          <CSVLink data={userVocabulary} filename={"User knowledge export"}>Download user knowledge</CSVLink>
         </div>
       )
     }
