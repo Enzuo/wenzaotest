@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 
 import {database} from '../model/index'
+import { saveCat } from '../model/pouch'
 
 export default class Test2 extends Component {
   // static defaultProps = {}
@@ -20,14 +21,15 @@ export default class Test2 extends Component {
   }
 
   handleClick = async (e) => {
-    const postsCollection = database.collections.get('posts')
-    console.log(postsCollection, database)
-    await database.action(async () => {
-      const newPost = await postsCollection.create(post => {
-        post.title = 'New post'
-        post.body = 'Lorem ipsum...'
-      })
-    })
+    // const postsCollection = database.collections.get('posts')
+    // console.log(postsCollection, database)
+    // await database.action(async () => {
+    //   const newPost = await postsCollection.create(post => {
+    //     post.title = 'New post'
+    //     post.body = 'Lorem ipsum...'
+    //   })
+    // })
+    saveCat()
   }
 }
 
