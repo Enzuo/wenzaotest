@@ -1,6 +1,7 @@
 import { Database } from '@nozbe/watermelondb'
 // import SQLiteAdapter from '@nozbe/watermelondb/adapters/sqlite' // not for the browser
 import LokiJSAdapter from '@nozbe/watermelondb/adapters/lokijs'
+import Post from './Post'
 
 
 import schema from './schema'
@@ -38,17 +39,20 @@ const adapter = new LokiJSAdapter({
     // }
   },
   onQuotaExceededError: (error) => {
+    console.log('quota error')
+
     // Browser ran out of disk space -- do something about it
   },
   onSetUpError: (error) => {
+    console.log('database setup error', error)
     // Database failed to load -- offer the user to reload the app or log out
   },
 })
 
 // Then, make a Watermelon database from it!
-const database = new Database({
+export const database = new Database({
   adapter,
-  modelClasses: [
+  modelClasses: [Post
     // Post, // ⬅️ You'll add Models to Watermelon here
   ],
   actionsEnabled: true,
